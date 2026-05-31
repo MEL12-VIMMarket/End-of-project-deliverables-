@@ -2,22 +2,35 @@
 // Email service using Nodemailer + Gmail SMTP
 // Author: CPRO306 Capstone Project | Date: 2026
  
+// ── IPv4-first DNS (must run BEFORE nodemailer is required) ──
+// Many cloud hosts (Railway, Fly, some Render plans) disable outbound IPv6.
+// When Node resolves smtp.gmail.com it sometimes gets an IPv6 address first
+// and the connection fails with ENETUNREACH. Setting the default DNS order
+// to 'ipv4first' affects EVERY DNS lookup in the process, including the ones
+// nodemailer makes internally — so this is the safest single-line fix.
+try {
+  require('dns').setDefaultResultOrder('ipv4first');
+} catch (_) {
+  // Older Node (< 16.4) doesn't have this — silently ignore.
+}
+ 
 const nodemailer = require('nodemailer');
  
 // Create reusable transporter
-// NOTE: We spell out host/port/secure instead of using `service: 'gmail'`,
-// and force `family: 4` (IPv4) — Railway and many other cloud hosts have
-// no IPv6 route to Gmail, which causes ENETUNREACH on boot.
+// We spell out host/port/secure (instead of `service: 'gmail'`) and pass
+// `family: 4` as belt-and-braces — combined with the DNS hint above this
+// guarantees IPv4 even on Node versions where nodemailer's internal resolver
+// would otherwise ignore the option.
 const transporter = nodemailer.createTransport({
   host:    'smtp.gmail.com',
   port:    465,
   secure:  true,           // TLS
-  family:  4,              // force IPv4 — fixes ENETUNREACH on Railway
+  family:  4,              // force IPv4
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS, // Gmail App Password (not your normal password)
   },
-  // Extra resilience for cloud environments — fail fast instead of hanging
+  // Fail fast instead of hanging if something is still wrong
   connectionTimeout: 10_000,
   greetingTimeout:   10_000,
   socketTimeout:     20_000,
@@ -512,7 +525,7 @@ const sendAdminOrderAlert = async (buyer, order) => {
   console.log(`📧 Admin order alert sent to ${adminEmail} for order #${order.order_id}`);
 };
  
-
+// Don't forget to export it:
 // module.exports = { ..., sendPasswordResetEmail };
 module.exports = {
   sendOrderConfirmation,
