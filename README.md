@@ -179,14 +179,15 @@ App opens at → http://localhost:3000
 
 ## 👥 Contributors
 
-| GitHub |  
+| GitHub | Role |
 |--------|------|
-| [@k240392-arch](https://github.com/k240392-arch)
-| [@k240490-del](https://github.com/k240490-del) 
-| [@Manya822](https://github.com/Manya822) |
-| [@Alisha349](https://github.com/Alisha349)
-| [@samii-collab](https://github.com/samii-collab)
-| [@AhmadZK231919] (https://github.com/AhmadZK231919)
+| [@k240392-arch](https://github.com/k240392-arch) | 🧑‍💻 Full Stack Developer |
+| [@k240490-del](https://github.com/k240490-del) | ⚙️ Backend Developer |
+| [@Manya822](https://github.com/Manya822) | 📋 Project Manager |
+| [@Alisha349](https://github.com/Alisha349) | 🎨 Frontend Developer |
+| [@samii-collab](https://github.com/samii-collab) | 🧪 QA & Testing |
+| [@AhmadZK231919](https://github.com/AhmadZK231919) | 🗄️ Database Administrator |
+
 ---
 
 *CPRO306 Capstone Project — Kent Institute Australia*
