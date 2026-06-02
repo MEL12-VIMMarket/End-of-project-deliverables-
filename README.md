@@ -179,7 +179,7 @@ App opens at → http://localhost:3000
 
 ## 👥 Contributors
 
-| GitHub | Role |
+| GitHub |  
 |--------|------|
 | [@k240392-arch](https://github.com/k240392-arch)
 | [@k240490-del](https://github.com/k240490-del) 
