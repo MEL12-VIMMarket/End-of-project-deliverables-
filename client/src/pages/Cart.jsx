@@ -27,7 +27,6 @@ export default function Cart() {
     <div style={S.page}>
       <div style={S.container}>
 
-        {/* Header */}
         <div style={S.pageHeader}>
           <h1 style={S.pageTitle}>🛒 Your Cart</h1>
           <span style={S.itemCount}>{cart.reduce((a,i)=>a+i.qty,0)} items</span>
@@ -35,7 +34,6 @@ export default function Cart() {
 
         <div style={S.layout}>
 
-          {/* ── Cart Items ── */}
           <div style={{ flex:1, minWidth:0 }}>
             {cart.map(item => (
               <div key={item.listing_id} style={S.itemCard} className="fm-cart-item-row">
@@ -73,11 +71,10 @@ export default function Cart() {
             <button onClick={clearCart} style={S.clearBtn}>🗑 Clear Cart</button>
           </div>
 
-          {/* ── Order Summary ── */}
+         
           <div style={S.summaryCard}>
             <h3 style={S.summaryTitle}>Order Summary</h3>
 
-            {/* Item breakdown */}
             <div style={S.summarySection}>
               {cart.map(item => (
                 <div key={item.listing_id} style={S.summaryRow}>
@@ -89,7 +86,7 @@ export default function Cart() {
 
             <div style={S.divider}/>
 
-            {/* Tax breakdown */}
+           
             <div style={S.taxSection}>
               <div style={S.summaryRow}>
                 <span style={S.summaryLabel}>Subtotal (ex. GST)</span>
@@ -103,7 +100,7 @@ export default function Cart() {
 
             <div style={S.divider}/>
 
-            {/* Total */}
+         
             <div style={S.totalRow}>
               <span style={S.totalLabel}>Total (inc. GST)</span>
               <span style={S.totalAmount}>${totalWithGST.toFixed(2)} AUD</span>
@@ -116,7 +113,7 @@ export default function Cart() {
             </Link>
             <Link to="/listings" style={S.continueLink}>← Continue Shopping</Link>
 
-            {/* Trust badges */}
+          
             <div style={S.trustRow}>
               {['🔒 Secure','💳 Stripe','✅ Verified'].map(b => (
                 <span key={b} style={S.trustBadge}>{b}</span>

@@ -1,3 +1,5 @@
+// pages/Home.jsx 
+// Author: CPRO306 Capstone Project | Date: 2026
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import api from '../services/api';
@@ -8,9 +10,6 @@ import PromoPopup from '../components/PromoPopup';
 import FeedbackWidget from '../components/FeedbackWidget';
 import { API_URL } from '../config';
 
-// ──────────────────────────────────────────────────────────────
-// PALETTE  (matches zip's design tokens — see styles/theme.css)
-// ──────────────────────────────────────────────────────────────
 const C = {
   forest:      '#253528',
   moss:        '#3D5B45',
@@ -28,10 +27,7 @@ const C = {
 
 const SERIF = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
 
-// ──────────────────────────────────────────────────────────────
-// INLINE SVG ICONS  (so we don't add lucide-react dep)
-// stroke-based, lucide-style, 24×24 viewBox, currentColor
-// ──────────────────────────────────────────────────────────────
+
 const Icon = ({ d, size = 20, strokeWidth = 2, fill = 'none', children, style }) => (
   <svg
     width={size} height={size} viewBox="0 0 24 24" fill={fill}
@@ -58,23 +54,19 @@ const MapPinIcon    = (p) => <Icon {...p}><path d="M20 10c0 4.993-5.539 10.193-7
 const AwardIcon     = (p) => <Icon {...p}><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></Icon>;
 const MailIcon      = (p) => <Icon {...p}><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></Icon>;
 
-// ──────────────────────────────────────────────────────────────
-// Helpers
-// ──────────────────────────────────────────────────────────────
+
 const getImg = (image_url) => {
   if (!image_url) return 'https://images.unsplash.com/photo-1540420773420-3366772f4999?w=600';
   if (image_url.startsWith('http')) return image_url;
   return `${API_URL}${image_url}`;
 };
 
-// ══════════════════════════════════════════════════════════════
-// MAIN COMPONENT
-// ══════════════════════════════════════════════════════════════
+
 export default function Home() {
   const navigate = useNavigate();
   const { addToCart } = useCart();
 
-  // ── Existing data fetching (preserved from original Home) ────
+
   const [featured,   setFeatured]   = useState([]);
   const [categories, setCategories] = useState([]);
   const [stats,      setStats]      = useState({});
@@ -90,7 +82,7 @@ export default function Home() {
     );
   }, []);
 
-  // ── Load Instrument Serif font (only while Home is mounted) ──
+  
   useEffect(() => {
     const id = 'home-instrument-serif-font';
     if (document.getElementById(id)) return;
@@ -99,10 +91,9 @@ export default function Home() {
     link.rel = 'stylesheet';
     link.href = 'https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&display=swap';
     document.head.appendChild(link);
-    // Don't remove on unmount — caching it across nav is fine.
+   
   }, []);
 
-  // ── Inject keyframes for fade-in animations (one time) ──
   useEffect(() => {
     const id = 'home-keyframes';
     if (document.getElementById(id)) return;
@@ -161,14 +152,13 @@ export default function Home() {
     document.head.appendChild(style);
   }, []);
 
-  // ── Search handler (preserved) ──
+
   const handleSearch = (e) => {
     e.preventDefault();
     if (search.trim()) navigate(`/listings?search=${encodeURIComponent(search)}`);
     else navigate('/listings');
   };
 
-  // ── Season detection (preserved from original) ──
   const month = new Date().getMonth();
   const season = (() => {
     if (month >= 2 && month <= 4)  return { name: 'Autumn', emoji: '🍂', tagline: "Autumn's Best, Fresh This Week", desc: "As the season changes, so does our selection. This month, we're celebrating the rich, earthy flavors of autumn with hand-selected produce at peak ripeness from farms across Australia.", items: [{name:'Butternut Pumpkin',desc:'Sweet & creamy',emoji:'🎃'},{name:'Brussels Sprouts',desc:'Tender & fresh',emoji:'🥬'},{name:'Heritage Apples',desc:'Crisp & juicy',emoji:'🍎'}], img: 'https://images.unsplash.com/photo-1597474561103-0d3afd8867f3?w=900' };
@@ -177,7 +167,7 @@ export default function Home() {
     return                          { name: 'Summer', emoji: '☀️', tagline: "Summer's Bounty, Sun-Ripened",       desc: "Summer means peak abundance. Tomatoes bursting with flavor, mangoes at their sweetest, and stone fruit picked sun-warm from the tree.",                                                                                                                  items: [{name:'Heirloom Tomatoes',desc:'Vine-ripened',emoji:'🍅'},{name:'Mangoes',desc:'Honey-sweet',emoji:'🥭'},{name:'Sweet Corn',desc:'Tender kernels',emoji:'🌽'}],                                img: 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=900' };
   })();
 
-  // ──────────────────────────────────────────────────────────────
+  
   return (
     <div style={{
       background: C.boneWhite,
@@ -186,40 +176,30 @@ export default function Home() {
       overflowX: 'hidden',
     }}>
 
-      {/* ═══ HERO ════════════════════════════════════════════ */}
       <Hero
         search={search} setSearch={setSearch} onSearch={handleSearch}
         navigate={navigate} stats={stats}
       />
 
-      {/* ═══ TRUST SECTION ═══════════════════════════════════ */}
       <TrustSection />
 
-      {/* ═══ CATEGORY DISCOVERY ══════════════════════════════ */}
       <CategoryDiscovery categories={categories} navigate={navigate} />
 
-      {/* ═══ FEATURED PRODUCTS ═══════════════════════════════ */}
       <FeaturedProducts featured={featured} addToCart={addToCart} navigate={navigate} />
 
-      {/* ═══ SEASONAL SECTION ════════════════════════════════ */}
       <SeasonalSection season={season} navigate={navigate} />
 
-      {/* ═══ FARMERS SECTION ═════════════════════════════════ */}
       <FarmersSection farmers={farmers} navigate={navigate} />
 
-      {/* ═══ TESTIMONIALS ════════════════════════════════════ */}
       <Testimonials />
 
-      {/* ── Floating widgets preserved from original ── */}
       <PromoPopup />
       <FeedbackWidget />
     </div>
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: HERO
-// ══════════════════════════════════════════════════════════════
+
 function Hero({ search, setSearch, onSearch, navigate, stats }) {
   return (
     <section style={{
@@ -230,7 +210,6 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
       <div style={{ maxWidth: 1400, margin: '0 auto', padding: '80px 32px 100px' }}>
         <div className="hm-2col" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 48, alignItems: 'center' }}>
 
-          {/* Left — Text */}
           <div className="hm-fade-up">
             <div style={{
               display: 'inline-flex', alignItems: 'center', gap: 8,
@@ -264,7 +243,6 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
               delivered to your door — real food from real farms.
             </p>
 
-            {/* Search bar */}
             <form onSubmit={onSearch} style={{
               display: 'flex',
               background: C.white,
@@ -299,7 +277,6 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
               </button>
             </form>
 
-            {/* CTA buttons */}
             <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14, marginBottom: 8 }}>
               <Link to="/listings" className="hm-pri-btn hm-btn-hover" style={primaryBtn}>
                 Start Shopping <ArrowRightIcon size={16} />
@@ -309,7 +286,6 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
               </Link>
             </div>
 
-            {/* Trust stats */}
             <div className="hm-trust-stats" style={{
               display: 'flex', gap: 48, marginTop: 48, paddingTop: 40,
               borderTop: `1px solid rgba(37,53,40,0.10)`,
@@ -335,7 +311,6 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
             </div>
           </div>
 
-          {/* Right — Image grid */}
           <div className="hm-zoom-in" style={{ position: 'relative' }}>
             <div className="hm-img-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 16 }}>
               <div style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
@@ -348,7 +323,7 @@ function Hero({ search, setSearch, onSearch, navigate, stats }) {
               </div>
             </div>
 
-            {/* Floating "AI-Powered" badge */}
+          
             <div className="hm-floating-card" style={{
               position: 'absolute', bottom: -24, left: -24,
               background: C.white, padding: 20, borderRadius: 18,
@@ -388,9 +363,6 @@ const ImgTile = ({ src, alt, aspect }) => (
   </div>
 );
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: TRUST  (4-feature row)
-// ══════════════════════════════════════════════════════════════
 function TrustSection() {
   const features = [
     { Icon: TruckIcon,    title: 'Free Delivery',     desc: 'On orders over $50 across Australia' },
@@ -430,11 +402,8 @@ function TrustSection() {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: CATEGORY DISCOVERY
-// ══════════════════════════════════════════════════════════════
 function CategoryDiscovery({ categories, navigate }) {
-  // Tinted backgrounds for variety — cycles through these for each card
+  
   const tints = [
     'rgba(167,191,165,0.22)',  // sage
     'rgba(196,106,74,0.16)',   // terracotta
@@ -503,9 +472,6 @@ function CategoryDiscovery({ categories, navigate }) {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: FEATURED PRODUCTS
-// ══════════════════════════════════════════════════════════════
 function FeaturedProducts({ featured, addToCart, navigate }) {
   const items = (featured && featured.length ? featured : []).slice(0, 4);
   const { toggleWishlist, isInWishlist } = useWishlist();
@@ -743,11 +709,7 @@ function SeasonalSection({ season, navigate }) {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: FARMERS
-// ══════════════════════════════════════════════════════════════
 function FarmersSection({ farmers, navigate }) {
-  // Stock farmer profile photos — used because the API doesn't store farmer photos
   const photos = [
     'https://images.unsplash.com/photo-1605000797499-95a51c5269ae?w=600',
     'https://images.unsplash.com/photo-1595257841889-eca2678454e2?w=600',
@@ -863,9 +825,6 @@ function FarmersSection({ farmers, navigate }) {
   );
 }
 
-// ══════════════════════════════════════════════════════════════
-// SECTION: TESTIMONIALS
-// ══════════════════════════════════════════════════════════════
 function Testimonials() {
   const testimonials = [
     { name: 'Jessica Wong',   location: 'Melbourne, VIC', avatar: '👩🏻‍🦰', rating: 5,

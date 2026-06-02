@@ -1,4 +1,4 @@
-// pages/AdminDashboard.jsx — Command-Centre Admin Dashboard
+// pages/AdminDashboard.jsx 
 // Author: CPRO306 Capstone Project | Date: 2026
 import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -8,7 +8,7 @@ import AdminBot from '../components/AdminBot';
 import UserHistoryModal from '../components/UserHistoryModal';
 import ChangeEmail from '../components/ChangeEmail';
 import { API_URL } from '../config';
-// ─── Shared mini-components ────────────────────────
+
 function Toggle({ on, onClick }) {
   return (
     <button onClick={onClick} style={{ width:44,height:24,borderRadius:12,border:'none',cursor:'pointer',position:'relative',transition:'background 0.2s',background:on?'#059669':'#D1D5DB',flexShrink:0 }}>
@@ -68,7 +68,7 @@ export default function AdminDashboard() {
   const [toast,      setToast]      = useState(null);
   const [loading,    setLoading]    = useState(false);
 
-  // Data
+ 
   const [stats,      setStats]      = useState(null);
   const [users,      setUsers]      = useState([]);
   const [orders,     setOrders]     = useState([]);
@@ -76,9 +76,9 @@ export default function AdminDashboard() {
   const [restockId,  setRestockId]  = useState(null);
   const [restockQty, setRestockQty] = useState('');
   const [auditLogs,  setAuditLogs]  = useState([]);
-  const [auditRole,    setAuditRole]    = useState('');     // '' | farmer | buyer | admin | system
-  const [auditStatus,  setAuditStatus]  = useState('');     // '' | success | failed | blocked
-  const [auditSearch,  setAuditSearch]  = useState('');     // free-text against name/email/action/description
+  const [auditRole,    setAuditRole]    = useState('');     
+  const [auditStatus,  setAuditStatus]  = useState('');     
+  const [auditSearch,  setAuditSearch]  = useState('');     
   const [aiLogs,     setAiLogs]     = useState([]);
   const [aiStats,    setAiStats]    = useState(null);
   const [security,   setSecurity]   = useState([]);
@@ -87,7 +87,7 @@ export default function AdminDashboard() {
   const [historyForUser, setHistoryForUser] = useState(null);
   const [systemTime, setSystemTime] = useState(new Date());
 
-  // Payouts
+  
   const [payouts,        setPayouts]        = useState([]);
   const [payoutTotals,   setPayoutTotals]   = useState(null);
   const [payoutFilter,   setPayoutFilter]   = useState('pending');
@@ -96,12 +96,12 @@ export default function AdminDashboard() {
   const [editingRate,    setEditingRate]    = useState(false);
   const [newRatePercent, setNewRatePercent] = useState('10');
 
-  // Filters
+  
   const [userSearch, setUserSearch] = useState('');
   const [userRole,   setUserRole]   = useState('');
   const [showArchived, setShowArchived] = useState(false);
 
-  // Settings
+ 
   const [settings,       setSettings]       = useState({ full_name:'', phone:'' });
   const [pwForm,         setPwForm]         = useState({ current_password:'', new_password:'', confirm_password:'' });
   const [savingSettings, setSavingSettings] = useState(false);
@@ -109,11 +109,10 @@ export default function AdminDashboard() {
   const [notifs, setNotifs] = useState({ new_user:true, new_order:true, security_alert:true, system_update:false, ai_errors:true });
   const [appear, setAppear] = useState({ theme:'dark', density:'comfortable', timezone:'Australia/Melbourne' });
 
-  // Live clock
+ 
   useEffect(() => { const t = setInterval(() => setSystemTime(new Date()), 1000); return () => clearInterval(t); }, []);
 
-  // Reload payouts when filter changes (only if on payouts tab)
-  useEffect(() => { if (tab === 'payouts') loadPayouts(); /* eslint-disable-next-line */ }, [payoutFilter]);
+  useEffect(() => { if (tab === 'payouts') loadPayouts(); }, [payoutFilter]);
 
   useEffect(() => {
     if (!user || user.role !== 'admin') { navigate('/login'); return; }
@@ -132,7 +131,7 @@ export default function AdminDashboard() {
     if (tab === 'payouts')    loadPayouts();
   }, [tab]);
 
-  // ── LOADERS ─────────────────────────────────────
+  
   const showToast = (msg, type='success') => { setToast({ msg, type }); setTimeout(() => setToast(null), 3500); };
   const load = async (fn) => { setLoading(true); try { await fn(); } finally { setLoading(false); } };
 
@@ -201,7 +200,7 @@ export default function AdminDashboard() {
     }
   };
 
-  // ── ACTIONS ─────────────────────────────────────
+  
   const suspendUser = async (uid) => {
     const reason = window.prompt('Reason for suspension:');
     if (!reason) return;
@@ -244,8 +243,7 @@ export default function AdminDashboard() {
       const r = await api.delete(`/admin/users/${uid}/permanent`);
       setUserDetail(null);
       const mode = r.data?.mode;
-      // For hard_delete, the row is gone. For anonymise paths, we hide it from the
-      // current view too — unless the admin is viewing archived users.
+    
       if (mode === 'hard_delete' || !showArchived) {
         setUsers(prev => prev.filter(u => u.user_id !== uid));
       } else {
@@ -339,10 +337,10 @@ export default function AdminDashboard() {
 
       <div className="dash-mobile-backdrop" onClick={() => setMobileNavOpen(false)} />
 
-      {/* ══ SIDEBAR ══ */}
+      {}
       <aside className="dash-sidebar" style={{ ...S.sidebar, width: sidebar ? 240 : 68 }}>
 
-        {/* Brand */}
+      
         <div style={S.brand}>
           {sidebar ? (
             <div style={S.brandInner}>
@@ -358,7 +356,7 @@ export default function AdminDashboard() {
           <button style={S.collapseBtn} onClick={() => setSidebar(o => !o)}>{sidebar ? '‹' : '›'}</button>
         </div>
 
-        {/* Live system status strip */}
+        {}
         {sidebar && (
           <div style={S.statusStrip}>
             <div style={S.statusDot} />
@@ -369,7 +367,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Quick stats */}
+       
         {sidebar && stats && (
           <div style={S.quickStats}>
             {[
@@ -385,7 +383,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Nav */}
         <nav style={S.nav}>
           {sidebar && <p style={S.navSec}>NAVIGATION</p>}
           {NAV.map(({ key, icon, label }) => {
@@ -405,7 +402,6 @@ export default function AdminDashboard() {
           })}
         </nav>
 
-        {/* Admin profile + logout */}
         <div style={S.sideBottom}>
           {sidebar && (
             <div style={S.adminCard}>
@@ -424,10 +420,10 @@ export default function AdminDashboard() {
         </div>
       </aside>
 
-      {/* ══ MAIN ══ */}
+     
       <div style={S.main} className="dash-main">
 
-        {/* Top bar */}
+        
         <div style={S.topBar}>
           <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
             <button
@@ -472,14 +468,14 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* Loading bar */}
+       
         {loading && <div style={S.loadingBar}><div style={S.loadingInner}/></div>}
 
 
-        {/* ══ OVERVIEW TAB ══ */}
+        
         {tab === 'overview' && (
           <div>
-            {/* Security alert banner */}
+          
             {securityAlerts > 0 && (
               <div style={S.alertBanner}>
                 <span style={{ fontSize:20 }}>🚨</span>
@@ -491,7 +487,7 @@ export default function AdminDashboard() {
               </div>
             )}
 
-            {/* 8-stat grid */}
+          
             <div style={S.statGrid}>
               {[
                 { icon:'👥', label:'Total Users',      value:stats?.users?.total||0,           sub:`${stats?.users?.farmers||0} farmers · ${stats?.users?.buyers||0} buyers`, color:'#2563EB', bg:'#EFF6FF', border:'#BFDBFE' },
@@ -517,7 +513,7 @@ export default function AdminDashboard() {
             </div>
 
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:20 }}>
-              {/* Recent orders */}
+            
               <div style={S.card}>
                 <div style={S.cardHead}>
                   <h3 style={S.cardTitle}>📦 Recent Orders</h3>
@@ -538,7 +534,7 @@ export default function AdminDashboard() {
                 ))}
               </div>
 
-              {/* Recent users */}
+           
               <div style={S.card}>
                 <div style={S.cardHead}>
                   <h3 style={S.cardTitle}>👥 Recent Users</h3>
@@ -562,7 +558,6 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* Platform health */}
             <div style={S.card}>
               <div style={S.cardHead}><h3 style={S.cardTitle}>🖥️ Platform Health</h3></div>
               <div style={{ display:'grid', gridTemplateColumns:'repeat(auto-fill,minmax(200px,1fr))', gap:12 }}>
@@ -587,10 +582,8 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ USERS TAB ══ */}
         {tab === 'users' && (
           <div>
-            {/* Search bar */}
             <div style={S.card}>
               <div style={{ display:'flex', gap:10, flexWrap:'wrap' }}>
                 <input style={{ flex:2, padding:'10px 14px', borderRadius:10, border:'1.5px solid #E5E7EB', fontSize:14, fontFamily:'inherit', outline:'none', minWidth:200 }}
@@ -663,7 +656,6 @@ export default function AdminDashboard() {
               </div>
             </div>
 
-            {/* User detail panel */}
             {userDetail && (
               <div style={{ ...S.card, border:'2px solid #059669', marginTop:0 }}>
                 <div style={{ display:'flex', justifyContent:'space-between', alignItems:'center', marginBottom:20 }}>
@@ -706,10 +698,10 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ LISTINGS TAB ══ */}
+   
         {tab === 'listings' && (
           <div>
-            {/* ── Orphaned/Out-of-stock alert ── */}
+         
             {listings.filter(l => l.quantity <= 0 || !l.farmer_active).length > 0 && (
               <div style={{ background:'#FFFBEB', border:'1.5px solid #FDE68A', borderRadius:12, padding:'14px 18px', marginBottom:16, display:'flex', alignItems:'center', gap:12 }}>
                 <span style={{ fontSize:22 }}>⚠️</span>
@@ -785,7 +777,7 @@ export default function AdminDashboard() {
                           </div>
                         </td>
                       </tr>
-                      {/* Inline restock row */}
+                      
                       {restockId === l.listing_id && (
                         <tr key={`restock-${l.listing_id}`} style={{ background:'#ECFDF5' }}>
                           <td colSpan={6} style={{ padding:'12px 16px' }}>
@@ -814,7 +806,7 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ ORDERS TAB ══ */}
+     
         {tab === 'orders' && (
           <div style={S.card}>
             <div style={{ overflowX:'auto' }}>
@@ -853,10 +845,9 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ PAYOUTS TAB ══ */}
+     
         {tab === 'payouts' && (
           <div>
-            {/* Stat strip */}
             <div style={S.statGrid}>
               {[
                 { icon:'⏳', label:'Pending Payouts', value:`$${Number(payoutTotals?.pending_total||0).toFixed(2)}`, sub:`${payoutTotals?.pending_count||0} owed`, color:'#B45309', bg:'#FFFBEB', border:'#FDE68A' },
@@ -873,7 +864,7 @@ export default function AdminDashboard() {
               ))}
             </div>
 
-            {/* Commission rate setting */}
+           
             <div style={S.card}>
               <div style={S.cardHead}>
                 <h3 style={S.cardTitle}>⚙️ Platform Commission Rate</h3>
@@ -909,7 +900,7 @@ export default function AdminDashboard() {
               )}
             </div>
 
-            {/* Filter + bulk actions */}
+       
             <div style={S.card}>
               <div style={{ display:'flex', gap:10, alignItems:'center', flexWrap:'wrap', marginBottom:14 }}>
                 <select
@@ -995,7 +986,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ AI LOGS TAB ══ */}
         {tab === 'ai' && (
           <div>
             <div style={S.statGrid}>
@@ -1038,7 +1028,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ AUDIT TRAIL TAB ══ */}
         {tab === 'audit' && (
           <div style={S.card}>
             {/* ── Filter bar ── */}
@@ -1109,7 +1098,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ SECURITY TAB ══ */}
         {tab === 'security' && (
           <div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16 }}>
@@ -1143,7 +1131,6 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ COMPLIANCE TAB ══ */}
         {tab === 'compliance' && (
           <div>
             <div style={{ display:'grid', gridTemplateColumns:'1fr 1fr', gap:16, marginBottom:16 }}>
@@ -1188,10 +1175,9 @@ export default function AdminDashboard() {
           </div>
         )}
 
-        {/* ══ SETTINGS TAB ══ */}
         {tab === 'settings' && (
           <div style={{ display:'flex', gap:20, alignItems:'flex-start' }} className="dash-settings-layout">
-            {/* Settings nav */}
+            
             <div className="dash-snav" style={{ width:185, background:'#fff', borderRadius:14, padding:12, border:'1px solid #F3F4F6', flexShrink:0, position:'sticky', top:20, boxShadow:'0 1px 3px rgba(0,0,0,0.05)' }}>
               <p style={{ fontSize:10, fontWeight:700, color:'#9CA3AF', textTransform:'uppercase', letterSpacing:1, padding:'4px 8px 10px', margin:0 }}>Settings</p>
               {[{k:'profile',icon:'👤',l:'Profile'},{k:'password',icon:'🔒',l:'Password'},{k:'notifs',icon:'🔔',l:'Notifications'},{k:'account',icon:'ℹ️',l:'Account Info'},{k:'danger',icon:'⚠️',l:'Danger Zone'}].map(({k,icon,l}) => (
@@ -1224,13 +1210,12 @@ export default function AdminDashboard() {
                   </div>
                   <button style={{ padding:'11px 28px', background:'linear-gradient(135deg,#991B1B,#DC2626)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }} onClick={saveSettings}>{savingSettings?'⏳ Saving...':'Save Profile'}</button>
 
-                  {/* ── Change email (separate form, password-confirmed) ── */}
                   <div style={{ marginTop:28, paddingTop:24, borderTop:'1px solid #F3F4F6' }}>
                     <ChangeEmail />
                   </div>
                 </div>
               )}
-              {/* Password */}
+              
               {appear._sec==='password' && (
                 <div>
                   <div style={{ marginBottom:24, paddingBottom:16, borderBottom:'1px solid #F3F4F6' }}><h2 style={{ fontSize:18, fontWeight:800, color:'#111827', margin:'0 0 4px' }}>Change Password</h2><p style={{ fontSize:13, color:'#6B7280', margin:0 }}>Update your admin access credentials</p></div>
@@ -1240,7 +1225,7 @@ export default function AdminDashboard() {
                   <button style={{ padding:'11px 28px', background:'linear-gradient(135deg,#991B1B,#DC2626)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }} onClick={changePassword}>{savingPw?'⏳ Changing...':'🔒 Change Password'}</button>
                 </div>
               )}
-              {/* Notifications */}
+         
               {appear._sec==='notifs' && (
                 <div>
                   <div style={{ marginBottom:24, paddingBottom:16, borderBottom:'1px solid #F3F4F6' }}><h2 style={{ fontSize:18, fontWeight:800, color:'#111827', margin:'0 0 4px' }}>Admin Notifications</h2><p style={{ fontSize:13, color:'#6B7280', margin:0 }}>Control what alerts you receive as an administrator</p></div>
@@ -1256,7 +1241,7 @@ export default function AdminDashboard() {
                   <br/><button style={{ padding:'11px 28px', background:'linear-gradient(135deg,#991B1B,#DC2626)', color:'#fff', border:'none', borderRadius:10, fontSize:14, fontWeight:700, cursor:'pointer', fontFamily:'inherit' }} onClick={() => showToast('✅ Notification preferences saved!')}>Save Preferences</button>
                 </div>
               )}
-              {/* Account info */}
+           
               {appear._sec==='account' && (
                 <div>
                   <div style={{ marginBottom:24, paddingBottom:16, borderBottom:'1px solid #F3F4F6' }}><h2 style={{ fontSize:18, fontWeight:800, color:'#111827', margin:'0 0 4px' }}>Account Information</h2><p style={{ fontSize:13, color:'#6B7280', margin:0 }}>Your admin account details and permissions</p></div>
@@ -1278,7 +1263,7 @@ export default function AdminDashboard() {
                   </div>
                 </div>
               )}
-              {/* Danger zone */}
+           
               {appear._sec==='danger' && (
                 <div>
                   <div style={{ marginBottom:24, paddingBottom:16, borderBottom:'1px solid #F3F4F6' }}><h2 style={{ fontSize:18, fontWeight:800, color:'#991B1B', margin:'0 0 4px' }}>⚠️ Danger Zone</h2><p style={{ fontSize:13, color:'#6B7280', margin:0 }}>These actions affect your admin session and account</p></div>
@@ -1295,18 +1280,14 @@ export default function AdminDashboard() {
 
       </div>
 
-      {/* ── AI Admin Assistant (floating, bottom-right) ── */}
+     
       <AdminBot />
 
-      {/* ── User History modal (admin can view any user's full timeline) ── */}
       <UserHistoryModal userId={historyForUser} onClose={() => setHistoryForUser(null)} />
     </div>
   );
 }
 
-// ═══════════════════════════════════════════════════
-//  STYLES
-// ═══════════════════════════════════════════════════
 const S = {
   shell:       { display:'flex', minHeight:'100vh', background:'#F3F4F6' },
   sidebar:     { background:'#0F1923', display:'flex', flexDirection:'column', flexShrink:0, transition:'width 0.25s ease', overflow:'hidden', position:'sticky', top:0, height:'100vh' },

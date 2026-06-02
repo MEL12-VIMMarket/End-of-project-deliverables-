@@ -1,16 +1,13 @@
 // routes/admin.js
-// Admin-only management routes
-
+// Author: CPRO306 Capstone Project | Date: 2026
+ 
 const express  = require('express');
 const router   = express.Router();
 const db       = require('../config/db');
 const { protect, adminOnly } = require('../middleware/authMiddleware');
-
-// All admin routes require login + admin role
+ 
 router.use(protect, adminOnly);
-
-// ── DASHBOARD STATS ────────────────────────────────────────
-// GET /api/admin/stats
+ 
 router.get('/stats', async (req, res) => {
   try {
     const [[users]]    = await db.query('SELECT COUNT(*) AS total FROM users');
@@ -26,7 +23,7 @@ router.get('/stats', async (req, res) => {
       ORDER BY o.created_at DESC LIMIT 1
     `);
     const latestOrder = latestOrders[0] || null;
-
+ 
     res.json({
       total_users:     users.total,
       active_listings: listings.total,
@@ -39,9 +36,7 @@ router.get('/stats', async (req, res) => {
     res.status(500).json({ message: 'Error fetching stats.' });
   }
 });
-
-// ── ALL USERS ──────────────────────────────────────────────
-// GET /api/admin/users
+ 
 router.get('/users', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -52,9 +47,7 @@ router.get('/users', async (req, res) => {
     res.status(500).json({ message: 'Error fetching users.' });
   }
 });
-
-// ── SUSPEND / ACTIVATE USER ────────────────────────────────
-// PATCH /api/admin/users/:id/status
+ 
 router.patch('/users/:id/status', async (req, res) => {
   const { is_active } = req.body;
   try {
@@ -64,12 +57,10 @@ router.patch('/users/:id/status', async (req, res) => {
     res.status(500).json({ message: 'Error updating user status.' });
   }
 });
-
-// ── BULK DEACTIVATE ORPHANED LISTINGS ─────────────────────
-// POST /api/admin/listings/bulk-deactivate-orphaned
+ 
 router.post('/listings/bulk-deactivate-orphaned', async (req, res) => {
   try {
-    // Deactivate out-of-stock listings that belong to deleted/suspended farmers
+ 
     const [result] = await db.query(`
       UPDATE listings l
       JOIN users u ON l.farmer_id = u.user_id
@@ -86,9 +77,7 @@ router.post('/listings/bulk-deactivate-orphaned', async (req, res) => {
     res.status(500).json({ message: 'Failed to deactivate orphaned listings.' });
   }
 });
-
-// ── ALL LISTINGS (for moderation) ─────────────────────────
-// GET /api/admin/listings
+ 
 router.get('/listings', async (req, res) => {
   try {
     const { search = '', status = '' } = req.query;
@@ -115,9 +104,7 @@ router.get('/listings', async (req, res) => {
     res.status(500).json({ message: 'Error fetching listings.' });
   }
 });
-
-// ── ALL ORDERS ─────────────────────────────────────────────
-// GET /api/admin/orders
+ 
 router.get('/orders', async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -130,5 +117,6 @@ router.get('/orders', async (req, res) => {
     res.status(500).json({ message: 'Error fetching orders.' });
   }
 });
-
+ 
 module.exports = router;
+ 

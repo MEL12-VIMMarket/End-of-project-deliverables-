@@ -1,8 +1,5 @@
 // pages/Farmers.jsx — Our Farmers directory
 // Author: CPRO306 Capstone Project | Date: 2026
-//
-// v2 — Loads Instrument Serif explicitly, refined typography hierarchy,
-// vetted farmer photos, tighter layout proportions.
 
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -179,7 +176,7 @@ export default function Farmers() {
       minHeight: '100vh',
     }}>
 
-      {/* ═══ HERO ═══ */}
+    
       <section style={{
         background: `linear-gradient(180deg, ${C.cream} 0%, ${C.boneWhite} 100%)`,
         padding: '64px 32px 72px',
@@ -193,10 +190,9 @@ export default function Farmers() {
           alignItems:         'center',
         }}>
 
-          {/* ─── Left: Text column ─── */}
           <div className="fm-fade-up fm-hero-text">
 
-            {/* Eyebrow tag */}
+           
             <div style={{
               display:      'inline-flex',
               alignItems:   'center',
@@ -214,7 +210,7 @@ export default function Farmers() {
               <span>Real People · Real Farms</span>
             </div>
 
-            {/* Headline — properly sized for split layout */}
+      
             <h1 className="fm-hero-h1" style={{
               fontFamily:    SERIF,
               fontSize:      56,
@@ -245,7 +241,7 @@ export default function Farmers() {
               sustainable agriculture.
             </p>
 
-            {/* Stats row — integrated into text column */}
+         
             <div className="fm-stats-row" style={{
               display:    'flex',
               gap:        48,
@@ -280,7 +276,7 @@ export default function Farmers() {
             </div>
           </div>
 
-          {/* ─── Right: Image column with floating credit card ─── */}
+  
           <div className="fm-fade-up fm-hero-img-wrap" style={{
             position:       'relative',
             animationDelay: '0.1s',
@@ -306,7 +302,6 @@ export default function Farmers() {
               />
             </div>
 
-            {/* Floating "Verified Farms" badge — bottom-left of image */}
             <div className="fm-floating-card" style={{
               position:        'absolute',
               bottom:          -24,
@@ -353,7 +348,7 @@ export default function Farmers() {
         </div>
       </section>
 
-      {/* ═══ BROWSE HEADER + SEARCH ═══ */}
+   
       <section style={{
         padding: '72px 32px 40px',
         borderTop: `1px solid ${C.mistGray}`,
@@ -439,7 +434,7 @@ export default function Farmers() {
         </div>
       </section>
 
-      {/* ═══ FARMERS GRID ═══ */}
+     
       <section style={{ padding: '0 32px 96px' }}>
         <div style={{ maxWidth: 1280, margin: '0 auto' }}>
 
@@ -544,7 +539,7 @@ export default function Farmers() {
                       </div>
                     </div>
 
-                    {/* Content */}
+                  
                     <div style={{
                       padding:       28,
                       display:       'flex',
@@ -644,9 +639,6 @@ export default function Farmers() {
         </div>
       </section>
 
-      {/* ═══ JOIN AS FARMER CTA ═══ removed — duplicates footer's
-           "Become a Farmer" link, and the green panel was clashing
-           with the footer beneath it. ═══════════════════════════ */}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 // pages/Checkout.jsx
-// Full 2-step checkout: Step 1 = Delivery Details + Time Window, Step 2 = Stripe Payment
+
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loadStripe } from '@stripe/stripe-js';
@@ -37,7 +37,7 @@ function StepIndicator({ step }) {
 }
 
 function OrderSummary({ cartItems = [] }) {
-  // Cart items use `qty` (cart count). `quantity` is the listing's stock level — DO NOT use for cart math.
+ 
   const getQty = (item) => Number(item.qty ?? item.quantity ?? 1);
   const subtotal     = cartItems.reduce((sum, item) => sum + item.price * getQty(item), 0);
   const gstAmount    = subtotal * 0.10;
@@ -143,7 +143,7 @@ function PaymentForm({ address, deliveryTime, onBack, onSuccess }) {
   const [error,   setError]   = useState('');
 
   const selectedSlot = TIME_SLOTS.find(sl => sl.id === deliveryTime);
-  // Cart items use `qty` (cart count). `quantity` is the listing's stock — DO NOT use for cart math.
+ 
   const getQty       = (item) => Number(item.qty ?? item.quantity ?? 1);
   const subtotal     = cartItems.reduce((sum, item) => sum + item.price * getQty(item), 0);
   const gstAmount    = subtotal * 0.10;

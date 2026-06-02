@@ -1,13 +1,4 @@
 // components/UserHistoryModal.jsx
-// Admin-side "Full User History" modal — shows ONE user's complete timeline,
-// with filters by event type, plus PDF/JSON download buttons.
-//
-// Usage:
-//   const [historyForUser, setHistoryForUser] = useState(null);
-//   <UserHistoryModal userId={historyForUser} onClose={() => setHistoryForUser(null)} />
-//
-//   ... then somewhere in your user table:
-//   <button onClick={() => setHistoryForUser(u.user_id)}>📜 Full History</button>
 import { useEffect, useState } from 'react';
 import api from '../services/api';
 

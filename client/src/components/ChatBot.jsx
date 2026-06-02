@@ -42,7 +42,7 @@ export default function ChatBot() {
         history: messages.slice(-8)
       });
       setTyping(false);
-      // Simulate typing effect
+      
       const reply = res.data.reply;
       setMessages(prev => [...prev, { role: 'assistant', content: reply }]);
       if (!open) setUnread(u => u + 1);
@@ -58,7 +58,7 @@ export default function ChatBot() {
   };
 
   const formatMsg = (text) => {
-    // Bold **text**
+   
     return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br/>');
   };
 
@@ -84,7 +84,6 @@ export default function ChatBot() {
         .cb-clear:hover { color:#6EE7B7 !important; }
       `}</style>
 
-      {/* ── FAB Button ── */}
       <button className="cb-fab" onClick={() => setOpen(o => !o)} style={S.fab}>
         {open
           ? <span style={{ fontSize:18, fontWeight:700 }}>✕</span>
@@ -95,11 +94,10 @@ export default function ChatBot() {
         )}
       </button>
 
-      {/* ── Chat Window ── */}
       {open && (
         <div style={S.window}>
 
-          {/* Header */}
+       
           <div style={S.header}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <div style={S.avatar}>🌿</div>
@@ -123,7 +121,7 @@ export default function ChatBot() {
             </div>
           </div>
 
-          {/* Messages */}
+         
           <div className="cb-msg" style={S.messages}>
 
             {messages.map((m, i) => (
@@ -140,7 +138,7 @@ export default function ChatBot() {
               </div>
             ))}
 
-            {/* Typing indicator */}
+          
             {typing && (
               <div style={{ display:'flex', alignItems:'flex-end', gap:7, marginBottom:12 }}>
                 <div style={S.botAvatar}>🌿</div>
@@ -156,7 +154,6 @@ export default function ChatBot() {
             <div ref={bottomRef}/>
           </div>
 
-          {/* Quick prompts — only show if no user messages yet */}
           {messages.length <= 1 && (
             <div style={S.quickRow}>
               {QUICK_PROMPTS.map(q => (
@@ -165,7 +162,7 @@ export default function ChatBot() {
             </div>
           )}
 
-          {/* Input */}
+        
           <div style={S.inputArea}>
             <div style={S.inputRow}>
               <textarea

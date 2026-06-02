@@ -6,7 +6,6 @@ import { useAuth } from '../context/AuthContext';
 import api from '../services/api';
 import { API_URL } from '../config';
 
-// ── SVG Brand Icons ─────────────────────────────────────────
 const GoogleIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24">
     <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
@@ -26,7 +25,6 @@ const FacebookIcon = () => (
   </svg>
 );
 
-// ── Animated typing headline ────────────────────────────────
 const HEADLINES = [
   "Australia's freshest farm marketplace",
   "Direct from farmers to your door",
@@ -72,7 +70,6 @@ function TypingHeadline() {
   );
 }
 
-// ── Main component ──────────────────────────────────────────
 export default function Login() {
   const { login, user } = useAuth();
   const navigate   = useNavigate();
@@ -89,8 +86,8 @@ export default function Login() {
   const [loginForm, setLoginForm] = useState({ email: '', password: '' });
   const [regForm,   setRegForm]   = useState({ full_name:'', email:'', password:'', confirm_password:'', role:'buyer' });
 
-  // Forgot password state
-  const [fpView,      setFpView]      = useState('login'); // login|forgot|verify|reset
+ 
+  const [fpView,      setFpView]      = useState('login'); 
   const [forgotEmail, setForgotEmail] = useState('');
   const [resetCode,   setResetCode]   = useState('');
   const [resetToken,  setResetToken]  = useState('');
@@ -99,12 +96,11 @@ export default function Login() {
   const [showNewPw,   setShowNewPw]   = useState(false);
   const [fpLoading,   setFpLoading]   = useState(false);
 
-  // OAuth role modal
+  
   const [oauthModal,    setOauthModal]    = useState(false);
   const [oauthProvider, setOauthProvider] = useState('');
   const [oauthRole,     setOauthRole]     = useState('buyer');
 
-  // Redirect already logged-in users to their dashboard
   useEffect(() => {
     if (user) {
       if      (user.role === 'farmer') navigate('/dashboard/farmer', { replace: true });
@@ -113,7 +109,6 @@ export default function Login() {
     }
   }, [user]);
 
-  // Stats counter animation
   const [stats, setStats] = useState({ farmers: 0, products: 0, orders: 0 });
   useEffect(() => {
     setTimeout(() => setMounted(true), 60);
@@ -133,8 +128,6 @@ export default function Login() {
     };
     setTimeout(() => requestAnimationFrame(tick), 600);
   }, []);
-
-  // ── Handlers ───────────────────────────────────────────────
   const handleLogin = async (e) => {
     e.preventDefault(); setError(''); setLoading(true);
     try {
@@ -222,10 +215,8 @@ export default function Login() {
         .tab-btn:hover      { color:#065F46 }
       `}</style>
 
-      {/* ══ RIGHT PANEL ══ */}
       <div style={R.panel}>
 
-        {/* ── TOP NAV BAR ── */}
         <div style={{ padding:'16px 28px', background:'#fff', borderBottom:'1px solid #F0F0F0', flexShrink:0 }}>
           <a href="/" style={{ display:'flex', alignItems:'center', gap:10, textDecoration:'none', cursor:'pointer' }}>
             <div style={{ width:36, height:36, borderRadius:10, background:'linear-gradient(135deg,#065F46,#059669)', display:'flex', alignItems:'center', justifyContent:'center', fontSize:18, boxShadow:'0 2px 8px rgba(5,150,105,0.25)' }}>🌿</div>
@@ -241,7 +232,6 @@ export default function Login() {
           transition:'all 0.7s cubic-bezier(0.22,1,0.36,1)',
         }}>
 
-          {/* ── FORGOT PASSWORD VIEWS ── */}
           {fpView !== 'login' && (
             <div>
               <div style={R.fpHeader}>
@@ -324,7 +314,6 @@ export default function Login() {
             </div>
           )}
 
-          {/* ── MAIN LOGIN / REGISTER VIEWS ── */}
           {fpView === 'login' && (
             <div>
               {/* Header */}
@@ -341,7 +330,6 @@ export default function Login() {
                 </p>
               </div>
 
-              {/* Tab switcher */}
               <div style={R.tabRow}>
                 {['login','register'].map(t => (
                   <button key={t} className="tab-btn"
@@ -353,25 +341,23 @@ export default function Login() {
                 ))}
               </div>
 
-              {/* Alerts */}
+            
               {error   && <div style={F.errBox}>⚠️ {error}</div>}
               {success && <div style={F.successBox}>✅ {success}</div>}
 
-              {/* OAuth buttons */}
               <div style={R.oauthGrid}>
                 <button className="oauth-btn" style={R.oauthGoogle} onClick={() => handleOAuth('Google')}>
                   <GoogleIcon/><span>Sign in with Google</span>
                 </button>
               </div>
 
-              {/* Divider */}
+            
               <div style={R.divider}>
                 <div style={R.divLine}/>
                 <span style={R.divText}>or continue with email</span>
                 <div style={R.divLine}/>
               </div>
 
-              {/* ── LOGIN FORM ── */}
               {tab === 'login' && (
                 <form onSubmit={handleLogin}>
                   <div style={F.fg}>
@@ -403,10 +389,10 @@ export default function Login() {
                 </form>
               )}
 
-              {/* ── REGISTER FORM ── */}
+             
               {tab === 'register' && (
                 <form onSubmit={handleRegister}>
-                  {/* Role selector */}
+                
                   <div style={F.fg}>
                     <label style={F.fl}>I want to...</label>
                     <div style={R.roleRow}>
@@ -467,7 +453,6 @@ export default function Login() {
                 </form>
               )}
 
-              {/* Switch link */}
               <p style={{ textAlign:'center', marginTop:20, fontSize:13, color:'#6B7280' }}>
                 {tab==='login'
                   ? <>Don't have an account?{' '}<button style={R.switchLink} onClick={() => { setTab('register'); setError(''); }}>Create one free →</button></>
@@ -475,7 +460,7 @@ export default function Login() {
                 }
               </p>
 
-              {/* Trust badges */}
+            
               <div style={R.trustRow}>
                 {['🔒 SSL Secured','✅ Verified Farmers','💳 Stripe Payments','🇦🇺 Australian Platform'].map(b => (
                   <span key={b} style={R.trustBadge}>{b}</span>
@@ -486,9 +471,9 @@ export default function Login() {
         </div>
       </div>
 
-        </div>{/* end formScroll */}
+        </div>
 
-      {/* ── OAUTH ROLE PICKER MODAL ── */}
+  
       {oauthModal && (
         <div style={M.overlay} onClick={() => setOauthModal(false)}>
           <div style={M.box} onClick={e => e.stopPropagation()}>
@@ -534,15 +519,9 @@ export default function Login() {
     </div>
   );
 }
-
-// ── SHELL STYLE ────────────────────────────────────────────
 const S = {
   shell: { display:'flex', minHeight:'100vh', fontFamily:"'Segoe UI', system-ui, -apple-system, sans-serif", background:'#F0FDF4', alignItems:'center', justifyContent:'center', padding:'32px 24px' },
 };
-
-// ── LEFT PANEL STYLES ───────────────────────────────────────
-
-// ── RIGHT PANEL STYLES ──────────────────────────────────────
 const R = {
   panel:      { width:'100%', maxWidth:490, background:'#fff', borderRadius:16, boxShadow:'0 4px 24px rgba(0,0,0,0.08)', overflowY:'auto', position:'relative' },
   wrap:       { width:'100%', maxWidth:480, margin:'0 auto' },
@@ -577,7 +556,6 @@ const R = {
   backBtn:    { background:'none', border:'none', color:'#059669', fontSize:13, fontWeight:600, cursor:'pointer', fontFamily:'inherit', padding:'0 0 16px', display:'block' },
 };
 
-// ── FORM STYLES ─────────────────────────────────────────────
 const F = {
   fg:        { marginBottom:16 },
   fl:        { display:'block', fontSize:11, fontWeight:700, color:'#374151', marginBottom:6, textTransform:'uppercase', letterSpacing:0.5 },
@@ -589,7 +567,6 @@ const F = {
   spinner:   { width:16, height:16, border:'2px solid rgba(255,255,255,0.3)', borderTopColor:'#fff', borderRadius:'50%', display:'inline-block', animation:'spin 0.8s linear infinite' },
 };
 
-// ── MODAL STYLES ────────────────────────────────────────────
 const M = {
   overlay:  { position:'fixed', inset:0, background:'rgba(0,0,0,0.55)', zIndex:9999, display:'flex', alignItems:'center', justifyContent:'center', padding:20, backdropFilter:'blur(6px)' },
   box:      { background:'#fff', borderRadius:24, width:'100%', maxWidth:520, boxShadow:'0 24px 60px rgba(0,0,0,0.2)', overflow:'hidden', animation:'fadeUp 0.3s ease' },

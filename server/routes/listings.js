@@ -8,7 +8,6 @@ const { protect, farmerOnly } = require('../middleware/authMiddleware');
 const multer   = require('multer');
 const path     = require('path');
 
-// ── MULTER FILE UPLOAD SETUP ───────────────────────────────
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'uploads/'),
   filename:    (req, file, cb) => {
@@ -26,8 +25,7 @@ const upload = multer({
   }
 });
 
-// ── GET ALL FARMERS (public) — for buyer filter dropdown ───
-// GET /api/listings/farmers
+
 router.get('/farmers', async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -44,8 +42,6 @@ router.get('/farmers', async (req, res) => {
   }
 });
 
-// ── GET ALL LISTINGS (public) ──────────────────────────────
-// GET /api/listings?category=1&search=tomato&min=5&max=20&farmer_id=3&page=1
 router.get('/', async (req, res) => {
   const { category, search, min, max, farmer_id, page = 1, limit = 12 } = req.query;
   const offset = (parseInt(page) - 1) * parseInt(limit);
@@ -80,16 +76,10 @@ router.get('/', async (req, res) => {
   }
 });
 
-// ── GET FEATURED LISTINGS (public, home page) ──────────────
-// GET /api/listings/featured?limit=8
-// Returns a curated mix with farmer + category variety.
-// Strategy: pick at most ONE listing per farmer, then at most ONE per category,
-// then fall back to fill the rest. This stops the home page from showing 8
-// listings from the same person.
 router.get('/featured', async (req, res) => {
   const limit = Math.min(parseInt(req.query.limit) || 8, 20);
   try {
-    // Pull a wider candidate pool sorted by appeal (has image, has rating, recency).
+   
     const [rows] = await db.query(`
       SELECT l.*, u.full_name AS farmer_name, c.name AS category_name,
              COALESCE(AVG(r.rating), 0) AS avg_rating,
@@ -105,7 +95,6 @@ router.get('/featured', async (req, res) => {
       LIMIT 80
     `);
 
-    // Diversify: walk the pool, keep one per farmer first, then fill in.
     const seenFarmer   = new Set();
     const seenCategory = new Set();
     const featured     = [];
@@ -121,7 +110,7 @@ router.get('/featured', async (req, res) => {
         leftovers.push(row);
       }
     }
-    // Top up from leftovers — relax category constraint, keep farmer variety
+    
     for (const row of leftovers) {
       if (featured.length >= limit) break;
       if (!seenFarmer.has(row.farmer_id)) {
@@ -129,14 +118,13 @@ router.get('/featured', async (req, res) => {
         seenFarmer.add(row.farmer_id);
       }
     }
-    // Final top-up — accept anything to meet `limit`
+
     for (const row of leftovers) {
       if (featured.length >= limit) break;
       if (!featured.find(f => f.listing_id === row.listing_id)) featured.push(row);
     }
 
-    // De-duplicate identical image_urls — if 3 listings share one uploaded image,
-    // null the duplicates so the frontend helper picks varied placeholders instead.
+    
     const seenUrls = new Set();
     for (const row of featured) {
       if (row.image_url) {
@@ -155,8 +143,7 @@ router.get('/featured', async (req, res) => {
   }
 });
 
-// ── GET SINGLE LISTING (public) ────────────────────────────
-// GET /api/listings/:id
+
 router.get('/:id', async (req, res) => {
   try {
     const [rows] = await db.query(`
@@ -178,8 +165,7 @@ router.get('/:id', async (req, res) => {
   }
 });
 
-// ── CREATE LISTING (farmer only) ───────────────────────────
-// POST /api/listings
+
 router.post('/', protect, farmerOnly, upload.single('image'), async (req, res) => {
   const { product_id, title, description, price, quantity, unit, category_id, location } = req.body;
   const image_url = req.file ? `/uploads/${req.file.filename}` : null;
@@ -206,20 +192,19 @@ router.post('/', protect, farmerOnly, upload.single('image'), async (req, res) =
   }
 });
 
-// ── UPDATE LISTING (farmer only) ───────────────────────────
-// PUT /api/listings/:id
+
 router.put('/:id', protect, farmerOnly, upload.single('image'), async (req, res) => {
   const { title, description, price, quantity, unit, category_id, location, is_active } = req.body;
 
   try {
-    // Pull current state for audit-trail diff
+    
     const [rows] = await db.query(
       'SELECT * FROM listings WHERE listing_id = ?', [req.params.id]
     );
     if (rows.length === 0) return res.status(404).json({ message: 'Listing not found.' });
     const before = rows[0];
 
-    // Owner check — admins can also edit (used by admin restock)
+    
     if (before.farmer_id !== req.user.user_id && req.user.role !== 'admin') {
       return res.status(403).json({ message: 'Not your listing.' });
     }
@@ -230,7 +215,7 @@ router.put('/:id', protect, farmerOnly, upload.single('image'), async (req, res)
 
     await db.query('UPDATE listings SET ? WHERE listing_id = ?', [fields, req.params.id]);
 
-    // ── Audit log: build a human-readable diff of what changed ──
+    
     const changes = [];
     if (title       !== undefined && String(title)       !== String(before.title))       changes.push(`title: "${before.title}" → "${title}"`);
     if (price       !== undefined && Number(price)       !== Number(before.price))       changes.push(`price: $${before.price} → $${price}`);
@@ -255,8 +240,7 @@ router.put('/:id', protect, farmerOnly, upload.single('image'), async (req, res)
   }
 });
 
-// ── DELETE LISTING (farmer or admin) ───────────────────────────
-// DELETE /api/listings/:id
+
 router.delete('/:id', protect, farmerOnly, async (req, res) => {
   try {
     const [rows] = await db.query(
@@ -267,7 +251,7 @@ router.delete('/:id', protect, farmerOnly, async (req, res) => {
       return res.status(403).json({ message: 'Not your listing.' });
     }
 
-    // Soft delete — keeps order history intact
+    
     await db.query('UPDATE listings SET is_active = 0 WHERE listing_id = ?', [req.params.id]);
 
     await db.query(
@@ -282,8 +266,6 @@ router.delete('/:id', protect, farmerOnly, async (req, res) => {
   }
 });
 
-// ── RESTOCK LISTING ────────────────────────────────────────
-// PATCH /api/listings/:id/restock
 router.patch('/:id/restock', protect, farmerOnly, async (req, res) => {
   const { add_quantity } = req.body;
   if (!add_quantity || isNaN(add_quantity) || Number(add_quantity) <= 0) {
@@ -312,8 +294,6 @@ router.patch('/:id/restock', protect, farmerOnly, async (req, res) => {
   }
 });
 
-// ── MARK OUT OF STOCK ──────────────────────────────────────
-// PATCH /api/listings/:id/out-of-stock
 router.patch('/:id/out-of-stock', protect, farmerOnly, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT farmer_id, title FROM listings WHERE listing_id = ?', [req.params.id]);
@@ -334,8 +314,6 @@ router.patch('/:id/out-of-stock', protect, farmerOnly, async (req, res) => {
   }
 });
 
-// ── MARK IN STOCK ──────────────────────────────────────────
-// PATCH /api/listings/:id/in-stock
 router.patch('/:id/in-stock', protect, farmerOnly, async (req, res) => {
   try {
     const [rows] = await db.query('SELECT farmer_id, title FROM listings WHERE listing_id = ?', [req.params.id]);
@@ -356,8 +334,6 @@ router.patch('/:id/in-stock', protect, farmerOnly, async (req, res) => {
   }
 });
 
-// ── MY LISTINGS (farmer's own) ─────────────────────────────
-// GET /api/listings/farmer/mine
 router.get('/farmer/mine', protect, farmerOnly, async (req, res) => {
   try {
     const [rows] = await db.query(

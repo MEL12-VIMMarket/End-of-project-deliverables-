@@ -10,7 +10,7 @@ import AccountClosure from '../components/AccountClosure';
 import ChangeEmail from '../components/ChangeEmail';
 import { API_URL } from '../config';
 
-// shared settings styles
+
 const SS = {
   wrap:     { display: 'flex', gap: 20, alignItems: 'flex-start' },
   snav:     { width: 185, background: '#fff', borderRadius: 14, padding: 12, border: '1px solid #F3F4F6', flexShrink: 0, position: 'sticky', top: 20, boxShadow: '0 1px 3px rgba(0,0,0,0.05)' },
@@ -52,7 +52,7 @@ const SS = {
   revokeBtn:{ padding: '4px 12px', background: '#FEF2F2', color: '#DC2626', border: '1px solid #FCA5A5', borderRadius: 8, fontSize: 12, fontWeight: 600, cursor: 'pointer', fontFamily: 'inherit' },
 };
 
-// ── Toggle helper ──
+
 function Toggle({ on, onClick }) {
   return (
     <button style={{ ...SS.toggle, background: on ? '#059669' : '#D1D5DB' }} onClick={onClick}>
@@ -61,9 +61,6 @@ function Toggle({ on, onClick }) {
   );
 }
 
-// ═══════════════════════════════════════════
-//  FARMER SETTINGS
-// ═══════════════════════════════════════════
 function FarmerSettings({
   user,
   profile,  setProfile,  saveProfile,  savingProfile,
@@ -119,7 +116,6 @@ function FarmerSettings({
             </div>
             <button style={SS.saveBtn} disabled={savingProfile} onClick={saveProfile}>{savingProfile ? '⏳ Saving...' : 'Save Profile'}</button>
 
-            {/* ── Change email (real, saves to DB) ── */}
             <div style={{ marginTop:24 }}><ChangeEmail /></div>
           </div>
         )}
@@ -175,14 +171,12 @@ function FarmerSettings({
             ))}
             <button style={SS.saveBtn} disabled={savingPrivacy} onClick={savePrivacy}>{savingPrivacy ? '⏳ Saving...' : 'Save Settings'}</button>
 
-            {/* ── Real data export + account closure (GDPR / Australian Privacy Act compliance) ── */}
+        
             <div style={{ marginTop:28 }}>
               <AccountClosure />
             </div>
           </div>
         )}
-
-        {/* APPEARANCE — removed */}
 
         {sec === 'security' && (
           <div>
@@ -286,9 +280,6 @@ function FarmerSettings({
   );
 }
 
-// ═══════════════════════════════════════════
-//  MAIN DASHBOARD
-// ═══════════════════════════════════════════
 export default function FarmerDashboard() {
   const { user, logout, updateUser } = useAuth();
   const navigate = useNavigate();
@@ -321,14 +312,9 @@ export default function FarmerDashboard() {
   const loadOrders   = () => api.get('/orders/my').then(r=>setOrders(r.data)).catch(()=>{});
   const handleLogout = () => { logout(); navigate('/'); };
 
-  // ─────────────────────────────────────────────────────────
-  //  SETTINGS — fully wired to backend
-  // ─────────────────────────────────────────────────────────
-  // Profile (saves to /auth/profile + /settings for bio)
   const [profile, setProfile] = useState({ full_name: '', phone: '', location: '', bio: '' });
   const [savingProfile, setSavingProfile] = useState(false);
 
-  // Per-section settings (saved to /api/settings)
   const [farm,    setFarm]    = useState({ farm_name: '', abn: '', description: '', delivery_radius: '25', pickup: true });
   const [notifs,  setNotifs]  = useState({ new_orders: true, order_updates: true, low_stock: true, weekly_report: true, buyer_messages: false, promotions: false });
   const [privacy, setPrivacy] = useState({ profile_public: true, show_reviews: true, data_analytics: false, marketing: false });
@@ -338,15 +324,13 @@ export default function FarmerDashboard() {
   const [savingPrivacy, setSavingPrivacy] = useState(false);
   const [savingPayout,  setSavingPayout]  = useState(false);
 
-  // Security: password change + status cards + active sessions
   const [pwForm,         setPwForm]         = useState({ current_password: '', new_password: '', confirm_password: '' });
   const [savingPw,       setSavingPw]       = useState(false);
   const [securityStatus, setSecurityStatus] = useState(null);
   const [sessions,       setSessions]       = useState([]);
   const [sessionsLoading,setSessionsLoading]= useState(false);
 
-  // Seed profile fields from logged-in user (full_name + phone from /users).
-  // Location and bio come from the settings load below.
+
   useEffect(() => {
     if (!user) return;
     setProfile(p => ({
@@ -357,7 +341,6 @@ export default function FarmerDashboard() {
     }));
   }, [user]);
 
-  // Load all server-backed settings (farm/notifs/privacy/payouts/bio) on mount
   useEffect(() => {
     api.get('/settings').then(r => {
       const d = r.data || {};
@@ -369,7 +352,6 @@ export default function FarmerDashboard() {
     }).catch(() => { /* defaults are fine */ });
   }, []);
 
-  // Load security status + sessions when the Settings tab opens
   useEffect(() => {
     if (tab !== 'settings') return;
     api.get('/auth/security-status').then(r => setSecurityStatus(r.data)).catch(() => setSecurityStatus(null));
@@ -380,7 +362,6 @@ export default function FarmerDashboard() {
       .finally(() => setSessionsLoading(false));
   }, [tab]);
 
-  // ── Save handlers ────────────────────────────────────────
   const saveProfile = async () => {
     setSavingProfile(true);
     try {
@@ -390,7 +371,6 @@ export default function FarmerDashboard() {
         phone:     profile.phone,
         location:  profile.location,
       });
-      // 2) bio (user_settings table — separate column)
       await api.patch('/settings', { section: 'bio', value: profile.bio || '' });
 
       updateUser(res?.data?.user || { full_name: profile.full_name, phone: profile.phone, address: profile.location });
@@ -539,7 +519,6 @@ export default function FarmerDashboard() {
 
       <div className="dash-mobile-backdrop" onClick={() => setMobileNavOpen(false)} />
 
-      {/* SIDEBAR */}
       <aside className="dash-sidebar" style={{...S.sidebar, width:sidebarOpen?240:68}}>
         <div style={S.sideTop}>
           {sidebarOpen && (
@@ -596,7 +575,7 @@ export default function FarmerDashboard() {
         </div>
       </aside>
 
-      {/* MAIN */}
+   
       <div style={S.main} className="dash-main">
         <div style={S.topBar}>
           <div style={{ display: 'flex', alignItems: 'center', flex: 1, minWidth: 0 }}>
@@ -699,7 +678,6 @@ export default function FarmerDashboard() {
           <div style={{maxWidth:760}}>
             <div style={S.card}>
 
-              {/* ── Step 1 — Pick from catalog ─────────────────────── */}
               <div style={{marginBottom:24, paddingBottom:24, borderBottom:'1px solid #F3F4F6'}}>
                 <div style={{display:'flex',alignItems:'baseline',gap:10,marginBottom:6}}>
                   <span style={{background:'#065F46',color:'#fff',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:999,letterSpacing:0.5}}>STEP 1</span>
@@ -709,7 +687,6 @@ export default function FarmerDashboard() {
                   Choose what you're selling from our catalog. The product name, description, and image are all standardised — you only set price, quantity, and location.
                 </p>
 
-                {/* Selected product preview OR picker */}
                 {form.product_id ? (
                   (() => {
                     const sel = catalogProducts.find(p=>p.product_id==form.product_id);
@@ -735,7 +712,7 @@ export default function FarmerDashboard() {
                   })()
                 ) : (
                   <>
-                    {/* Search input */}
+                    {}
                     <input
                       type="text"
                       placeholder="🔍 Search catalog... (e.g. tomato, mango, honey)"
@@ -744,7 +721,7 @@ export default function FarmerDashboard() {
                       style={{...SS.fi,marginBottom:12}}
                     />
 
-                    {/* Catalog grid */}
+                    {}
                     <div style={{
                       maxHeight:360, overflowY:'auto',
                       border:'1px solid #E5E7EB', borderRadius:12, padding:8,
@@ -798,7 +775,6 @@ export default function FarmerDashboard() {
                 )}
               </div>
 
-              {/* ── Step 2 — Set your offer details ────────────────── */}
               <form onSubmit={handleSubmit} style={{opacity: form.product_id ? 1 : 0.45, pointerEvents: form.product_id ? 'auto' : 'none'}}>
                 <div style={{display:'flex',alignItems:'baseline',gap:10,marginBottom:6}}>
                   <span style={{background:'#065F46',color:'#fff',fontSize:11,fontWeight:700,padding:'3px 10px',borderRadius:999,letterSpacing:0.5}}>STEP 2</span>
@@ -850,7 +826,6 @@ export default function FarmerDashboard() {
         )}
       </div>
 
-      {/* RESTOCK MODAL */}
       {restockModal && (
         <div style={S.overlay} onClick={()=>setRestockModal(null)}>
           <div style={S.modal} onClick={e=>e.stopPropagation()}>

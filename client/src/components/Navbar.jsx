@@ -1,8 +1,6 @@
-// components/Navbar.jsx — Editorial top navigation
+// components/Navbar.jsx — 
 // Author: CPRO306 Capstone Project | Date: 2026
-//
-// v2 — Refined leaf+berry logo mark, larger wordmark with proper letter-spacing,
-// links to dedicated /farmers and /seasonal pages.
+
 
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -10,7 +8,7 @@ import { useAuth } from '../context/AuthContext';
 import { useCart } from '../context/CartContext';
 import { useWishlist } from '../context/WishlistContext';
 
-// ── Palette (kept in sync with Home.jsx) ──────────────────────
+
 const C = {
   forest:    '#253528',
   moss:      '#3D5B45',
@@ -25,7 +23,7 @@ const C = {
 
 const SERIF = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
 
-// ── Inline SVG icons (lucide-style) ───────────────────────────
+
 const I = ({ children, size = 20 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth="2"
@@ -38,7 +36,7 @@ const HeartIcon  = () => <I><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0
 const UserIcon   = () => <I><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></I>;
 const CartIcon   = () => <I><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></I>;
 
-// Refined logo mark — single elegant leaf in a cream circle with accent berry
+
 const LogoMark = () => (
   <svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="20" cy="20" r="18.5" stroke={C.forest} strokeWidth="1.3" fill={C.cream}/>

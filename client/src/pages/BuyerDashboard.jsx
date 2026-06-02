@@ -7,19 +7,11 @@ import api from '../services/api';
 import { loadStripe } from '@stripe/stripe-js';
 import { Elements, CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { API_URL } from '../config';
-// Single shared Stripe promise (reused by checkout and add-card)
 const stripePromise = loadStripe(
   process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY ||
   'pk_test_51TE94nBl1cukRgBPWYVFB2h0mz8ht4bGk3HcaOqZ00ACnFlVKZZk2aNcZBojsPAMF6rWQMmqF2VPAam4ruXPY3fT00cqbPMV4C'
 );
 
-// ─────────────────────────────────────────────────────
-// ── ADD CARD MODAL (Stripe SetupIntent flow) ─────────
-// ─────────────────────────────────────────────────────
-// Real card-on-file capture: we call /payments/setup-intent to get a client
-// secret from Stripe, confirm the card on the client (so raw card data never
-// touches our server — PCI compliance), then POST the resulting payment_method_id
-// back so the backend saves brand/last4/exp metadata in the payment_methods table.
 function AddCardForm({ onClose, onSaved }) {
   const stripe   = useStripe();
   const elements = useElements();
@@ -32,11 +24,9 @@ function AddCardForm({ onClose, onSaved }) {
     setLoading(true); setError('');
 
     try {
-      // 1) Ask backend for a SetupIntent client_secret
       const { data: si } = await api.post('/payments/setup-intent');
       if (!si.client_secret) throw new Error('Could not create setup intent.');
 
-      // 2) Confirm the card with Stripe on the client (PCI-safe path)
       const { error: stripeErr, setupIntent } = await stripe.confirmCardSetup(
         si.client_secret,
         { payment_method: { card: elements.getElement(CardElement) } }
@@ -46,7 +36,6 @@ function AddCardForm({ onClose, onSaved }) {
         throw new Error('Card could not be confirmed. Please try a different card.');
       }
 
-      // 3) Tell our backend to persist brand/last4/exp metadata
       await api.post('/payments/payment-methods', {
         payment_method_id: setupIntent.payment_method,
       });
@@ -116,7 +105,6 @@ function AddCardModal({ open, onClose, onSaved }) {
   );
 }
 
-// ── Toggle switch ─────────────────────────────────
 function Toggle({ on, onClick }) {
   return (
     <button style={{ ...SS.toggle, background: on ? '#059669' : '#D1D5DB' }} onClick={onClick}>
@@ -125,7 +113,6 @@ function Toggle({ on, onClick }) {
   );
 }
 
-// ── Star rating ───────────────────────────────────
 function Stars({ n, interactive = false, onChange }) {
   return (
     <div style={{ display: 'flex', gap: 4 }}>
@@ -140,9 +127,6 @@ function Stars({ n, interactive = false, onChange }) {
   );
 }
 
-// ═══════════════════════════════════════════════════
-//  SETTINGS PAGE (buyer-specific)
-// ═══════════════════════════════════════════════════
 function BuyerSettings({
   user, orders, onLogout,
   settings, setSettings, pwForm, setPwForm,
@@ -157,10 +141,6 @@ function BuyerSettings({
   const [saved, setSaved] = useState('');
   const flash = (m = 'Changes saved!') => { setSaved(m); setTimeout(() => setSaved(''), 3000); };
 
-  // (notifs/privacy state lifted to parent so they can be saved to backend)
-  // (appearance settings removed)
-
-  // ── Payment cards: real data from /api/payments/payment-methods ──
   const [cards,        setCards]        = useState([]);
   const [cardsLoading, setCardsLoading] = useState(false);
   const [addCardOpen,  setAddCardOpen]  = useState(false);
@@ -200,7 +180,7 @@ function BuyerSettings({
 
   return (
     <div style={SS.wrap} className="dash-settings-layout">
-      {/* Settings nav */}
+     
       <div style={SS.snav} className="dash-snav">
         <p style={SS.snavTitle}>Settings</p>
         {sections.map(({ k, icon, label }) => (
@@ -214,7 +194,7 @@ function BuyerSettings({
       <div style={SS.scontent}>
         {saved && <div style={SS.toast}>✅ {saved}</div>}
 
-        {/* PROFILE */}
+     
         {sec === 'profile' && (
           <div>
             <div style={SS.head}><h2 style={SS.stitle}>Profile Information</h2><p style={SS.ssub}>Update how you appear on FarmMarket</p></div>

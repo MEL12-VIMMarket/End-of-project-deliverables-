@@ -1,5 +1,4 @@
-// pages/Listings.jsx — Catalog-driven browse page (Amazon-style)
-
+// pages/Listings.jsx 
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
@@ -9,7 +8,7 @@ import { useWishlist } from '../context/WishlistContext';
 import { API_URL } from '../config';
 import { getProduceImage } from '../utils/produceImage';
 
-// ── Palette ──
+
 const C = {
   forest:    '#253528', moss:      '#3D5B45', sage:      '#A7BFA5',
   cream:     '#F6F3EE', boneWhite: '#FBFAF8', charcoal:  '#1C1F1D',
@@ -21,13 +20,8 @@ const SERIF = "'Instrument Serif', 'Cormorant Garamond', Georgia, serif";
 
 const FALLBACK = 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=800&auto=format&fit=crop&q=75';
 
-// Smart image resolver: use the farmer's/catalog's real image if present,
-// otherwise pick a category- and title-matched photo from the curated pool
-// (so "Rosemary" gets a rosemary photo, not a generic market shot).
-// `product` is the full product object so we can match on name + category.
 const getImg = (product) => {
-  if (!product) return FALLBACK;
-  // Back-compat: callers that still pass a raw URL string
+  if (!product) return 
   if (typeof product === 'string') {
     if (!product) return FALLBACK;
     if (product.startsWith('http')) return product;
@@ -41,7 +35,6 @@ const getImg = (product) => {
   }, 800);
 };
 
-// ── Inline icons ──
 const I = ({ children, size = 16, sw = 2 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none"
        stroke="currentColor" strokeWidth={sw}
@@ -55,7 +48,6 @@ const XIcon       = (p) => <I {...p}><path d="M18 6 6 18"/><path d="m6 6 12 12"/
 const HomeIcon    = (p) => <I {...p}><path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-5.999a2 2 0 0 1 2.582 0l7 5.999A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></I>;
 const CartIcon    = (p) => <I {...p}><circle cx="8" cy="21" r="1"/><circle cx="19" cy="21" r="1"/><path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12"/></I>;
 
-// ──────────────────────────────────────────────────────────────
 export default function Listings() {
   const [searchParams] = useSearchParams();
   const { addToCart } = useCart();
@@ -73,7 +65,6 @@ export default function Listings() {
     sort: 'newest', page: 1,
   });
 
-  // Load font
   useEffect(() => {
     const id = 'instrument-serif-font';
     if (document.getElementById(id)) return;
@@ -83,7 +74,6 @@ export default function Listings() {
     document.head.appendChild(link);
   }, []);
 
-  // CSS injection
   useEffect(() => {
     const id = 'listings-styles';
     if (document.getElementById(id)) return;
@@ -123,12 +113,10 @@ export default function Listings() {
     document.head.appendChild(style);
   }, []);
 
-  // Load categories ONCE
   useEffect(() => {
     api.get('/categories').then(r => setCategories(r.data)).catch(() => {});
   }, []);
 
-  // Refetch products whenever filters change
   useEffect(() => {
     setLoading(true);
     const params = new URLSearchParams();
@@ -191,7 +179,6 @@ export default function Listings() {
       minHeight:  '100vh',
     }}>
 
-      {/* HERO */}
       <section style={{
         background: `linear-gradient(180deg, ${C.cream} 0%, ${C.boneWhite} 100%)`,
         padding:    '56px 32px 40px',
@@ -238,7 +225,6 @@ export default function Listings() {
             Fresh, locally grown produce from Australian farms — straight to your door.
           </p>
 
-          {/* Quick category pills */}
           <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap' }}>
             <button
               className={`ls-pill ${filters.category === '' ? 'ls-pill-active' : ''}`}
@@ -258,14 +244,12 @@ export default function Listings() {
         </div>
       </section>
 
-      {/* MAIN */}
       <section style={{ padding: '40px 32px 80px' }}>
         <div style={{ maxWidth: 1300, margin: '0 auto' }}>
           <div className="ls-layout" style={{
             display: 'flex', gap: 32, alignItems: 'flex-start',
           }}>
 
-            {/* SIDEBAR */}
             <aside className="ls-sidebar" style={{
               width: 260, flexShrink: 0,
               background: C.white, borderRadius: 18, padding: 24,
@@ -295,7 +279,7 @@ export default function Listings() {
                 )}
               </div>
 
-              {/* Search */}
+             
               <FilterSection label="Search produce">
                 <div style={{
                   display: 'flex', alignItems: 'center', gap: 8,
@@ -324,7 +308,6 @@ export default function Listings() {
                 </div>
               </FilterSection>
 
-              {/* Category */}
               <FilterSection label="Category">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <CatBtn active={filters.category === ''} onClick={() => set('category', '')}>
@@ -340,7 +323,6 @@ export default function Listings() {
                 </div>
               </FilterSection>
 
-              {/* Season */}
               <FilterSection label="Season">
                 <div style={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
                   <CatBtn active={filters.season === ''} onClick={() => set('season', '')}>
@@ -354,7 +336,7 @@ export default function Listings() {
                 </div>
               </FilterSection>
 
-              {/* Availability */}
+            
               <FilterSection label="Availability">
                 <label style={{
                   display: 'flex', alignItems: 'center', gap: 10,
@@ -373,7 +355,6 @@ export default function Listings() {
                 </label>
               </FilterSection>
 
-              {/* Price */}
               <FilterSection label="Price range (AUD)" last>
                 <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginBottom: 10 }}>
                   <input type="number" placeholder="Min" min="0"
@@ -409,7 +390,6 @@ export default function Listings() {
               </FilterSection>
             </aside>
 
-            {/* RESULTS */}
             <main style={{ flex: 1, minWidth: 0 }}>
               <div className="ls-results-row" style={{
                 display: 'flex', justifyContent: 'space-between',
@@ -443,7 +423,6 @@ export default function Listings() {
                 </div>
               </div>
 
-              {/* Active filter tags */}
               {activeFilterCount > 0 && (
                 <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', marginBottom: 20 }}>
                   {filters.search && (
@@ -466,7 +445,6 @@ export default function Listings() {
                 </div>
               )}
 
-              {/* Loading */}
               {loading && (
                 <div style={{ textAlign: 'center', padding: 80, color: C.muted }}>
                   <div style={{
@@ -480,7 +458,6 @@ export default function Listings() {
                 </div>
               )}
 
-              {/* Empty */}
               {!loading && products.length === 0 && (
                 <div style={{
                   textAlign: 'center', padding: '80px 24px',
@@ -519,7 +496,6 @@ export default function Listings() {
                 </div>
               )}
 
-              {/* Catalog grid */}
               {!loading && products.length > 0 && (
                 <>
                   <div className="ls-grid" style={{
@@ -532,7 +508,6 @@ export default function Listings() {
                     ))}
                   </div>
 
-                  {/* Pagination */}
                   <div style={{
                     display: 'flex', justifyContent: 'center', alignItems: 'center',
                     gap: 16, marginTop: 48, paddingTop: 32,
@@ -564,7 +539,6 @@ export default function Listings() {
   );
 }
 
-// ── Catalog Card (renders a /products/:slug card) ──
 function CatalogCard({ product, onAddToCart }) {
   const isAvailable = product.offers_count > 0 && product.total_stock > 0;
   const { toggleWishlist, isInWishlist } = useWishlist();
@@ -590,9 +564,7 @@ function CatalogCard({ product, onAddToCart }) {
               Currently unavailable
             </div>
           )}
-          {/* Wishlist heart — placed bottom-right so it doesn't clash with the
-              category/seasonal badges in the top corners. Stops bubbling so
-              clicking the heart never triggers the parent <Link>. */}
+
           <button
             onClick={(e) => {
               e.preventDefault();
@@ -692,7 +664,6 @@ function CatalogCard({ product, onAddToCart }) {
   );
 }
 
-// ── Sub-components ────────────────────────────────────────────
 function FilterSection({ label, children, last }) {
   return (
     <div style={{
@@ -749,7 +720,7 @@ function ActiveTag({ children, onClear }) {
   );
 }
 
-// ── Style objects ──
+
 const pillBase = {
   padding: '8px 18px', borderRadius: 999,
   fontSize: 13, fontWeight: 500, cursor: 'pointer',
@@ -776,7 +747,7 @@ const pageBtnStyle = {
   cursor: 'pointer', fontFamily: 'inherit',
 };
 
-// Catalog card styles
+
 const S = {
   card: {
     display: 'flex', flexDirection: 'column',

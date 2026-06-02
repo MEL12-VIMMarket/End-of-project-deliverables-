@@ -72,9 +72,9 @@ The browser will automatically open: http://localhost:3000
 
 | Role   | Email             | Password    |
 |--------|-------------------|-------------|
-| Farmer | farmer@demo.com   | Password123 |
-| Buyer  | buyer@demo.com    | Password123 |
-| Admin  | admin@demo.com    | Password123 |
+| Farmer | farmer@demo.com   | test123 |
+| Buyer  | buyer@demo.com    | test123 |
+| Admin  | admin@demo.com    | test123 |
 
 ---
 

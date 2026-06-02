@@ -15,7 +15,6 @@ const pool = mysql.createPool({
   queueLimit: 0
 });
 
-// Promisify so we can use async/await
 const db = pool.promise();
 
 // Test the connection on startup

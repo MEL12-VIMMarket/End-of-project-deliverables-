@@ -1,10 +1,4 @@
 // context/CartContext.jsx
-// Global shopping cart state with localStorage persistence.
-//
-// Self-healing: on mount, every cart item is checked against the live database.
-// Items whose listing no longer exists (or has been deactivated) are silently
-// dropped. This prevents the classic "Listing not found" checkout error that
-// happens when the database is reset but the browser cart still has old IDs.
 
 import { createContext, useContext, useState, useEffect, useRef } from 'react';
 import api from '../services/api';

@@ -1,5 +1,5 @@
 // components/AdminBot.jsx — AI Assistant for the Admin Dashboard
-// Mirrors the public FarmBot UX but with admin-themed colours and admin-only endpoint.
+
 import { useState, useRef, useEffect } from 'react';
 import api from '../services/api';
 
@@ -58,7 +58,7 @@ export default function AdminBot() {
   };
 
   const formatMsg = (text) => {
-    // Bold **text** + line breaks. Escape HTML first to avoid XSS from model output.
+  
     const escaped = text
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
       .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
@@ -88,7 +88,7 @@ export default function AdminBot() {
         .ab-clear:hover { color:#FCA5A5 !important; }
       `}</style>
 
-      {/* ── FAB Button ── */}
+     
       <button className="ab-fab" onClick={() => setOpen(o => !o)} style={S.fab} aria-label="Open AdminBot">
         {open
           ? <span style={{ fontSize:18, fontWeight:700 }}>✕</span>
@@ -99,11 +99,10 @@ export default function AdminBot() {
         )}
       </button>
 
-      {/* ── Chat Window ── */}
       {open && (
         <div style={S.window}>
 
-          {/* Header */}
+  
           <div style={S.header}>
             <div style={{ display:'flex', alignItems:'center', gap:12 }}>
               <div style={S.avatar}>🤖</div>
@@ -127,7 +126,7 @@ export default function AdminBot() {
             </div>
           </div>
 
-          {/* Messages */}
+       
           <div className="ab-msg" style={S.messages}>
             {messages.map((m, i) => (
               <div key={i} style={{ display:'flex', flexDirection:'column', alignItems: m.role==='user' ? 'flex-end' : 'flex-start', marginBottom:12, animation:'ab-slideUp 0.2s ease' }}>
@@ -158,7 +157,6 @@ export default function AdminBot() {
             <div ref={bottomRef}/>
           </div>
 
-          {/* Quick prompts */}
           {messages.length <= 1 && (
             <div style={S.quickRow}>
               {QUICK_PROMPTS.map(q => (
@@ -167,7 +165,7 @@ export default function AdminBot() {
             </div>
           )}
 
-          {/* Input */}
+      
           <div style={S.inputArea}>
             <div style={S.inputRow}>
               <textarea
